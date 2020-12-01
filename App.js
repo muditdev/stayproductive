@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, TouchableOpacity, View, SafeAreaView, Vibration, Platform } from 'react-native';
 import styles from './app.style'
 import Clock from './components/Clock/Clock';
+import Header from './components/shared/Header/Header';
 
 const initialClockData = {
   isWork: false,
@@ -64,12 +65,15 @@ export default function App() {
       clearInterval(timerRef.current);
       timerRef.current = null;
       setIsTimerRunning(false)
-    } else {
+    } else {  
       startTimer();
     }
   }
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{width: '100%'}}>
+        <Header />
+      </View>
       <Text style={{ color: '#fff' }}>Timer</Text>
       <TouchableOpacity style={{ width: 100 + '%' }} onPress={toggleTimer}>
         <Clock time={clock.duration} />
