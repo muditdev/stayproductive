@@ -1,9 +1,18 @@
 import React, { useRef, useReducer, useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, TouchableOpacity, View, SafeAreaView, Vibration, Platform } from 'react-native';
-import styles from './app.style'
+import { Text, TouchableOpacity, View, SafeAreaView, Vibration, Platform } from 'react-native';
+import { AppLoading } from 'expo';
+import {
+  useFonts,
+  RobotoMono_300Light,
+  RobotoMono_400Regular,
+  RobotoMono_500Medium,
+  RobotoMono_700Bold,
+} from '@expo-google-fonts/roboto-mono'
+
 import Clock from './components/Clock/Clock';
 import Header from './components/shared/Header/Header';
+import styles from './app.style'
 
 const initialClockData = {
   isWork: false,
@@ -28,11 +37,23 @@ function clockReducer(state, action) {
   }
 }
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    RobotoMono_300Light,
+    RobotoMono_400Regular,
+    RobotoMono_500Medium,
+    RobotoMono_700Bold
+  });
   const [clock, dispatchClock] = useReducer(clockReducer, initialClockData);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const timerRef = useRef(null);
   const durationRef = useRef(clock.duration);
   useEffect(() => {
+    // loadfonts
+    // Font.loadAsync({
+    //   'RobotoMono-Bold': require('./assets/fonts/RobotoMono-Bold.ttf'),
+    //   'RobotoMono-Light': require('./assets/fonts/RobotoMono-Light.ttf'),
+    //   'RobotoMono-Medium': require('./assets/fonts/RobotoMono-Medium.ttf'),
+    // })
     return () => {
       clearInterval(timerRef.current)
     }
@@ -65,13 +86,14 @@ export default function App() {
       clearInterval(timerRef.current);
       timerRef.current = null;
       setIsTimerRunning(false)
-    } else {  
+    } else {
       startTimer();
     }
   }
+  if(!fontsLoaded) return <AppLoading />
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{width: '100%'}}>
+      <View style={{ width: '100%' }}>
         <Header />
       </View>
       <Text style={{ color: '#fff' }}>Timer</Text>
